@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html style="padding:0;margin:0;">
+    <head>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Controller</title>
+    </head>
+    <body style="padding:0;margin:0;overflow: hidden;">
+        <canvas id="canvas"></canvas>
+
+        <script>
+            var socket = io();
+
+
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            var rotatedClockwise = false;
+            function canvasResize() {
+				canvas.width  = window.innerWidth;
+                canvas.height = window.innerHeight;
+                console.log(canvas.width, canvas.height);
+				ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                if(canvas.height > canvas.width){
+                    rotatedClockwise = true;
+                }
+			}
+			canvasResize();
+
+            window.onresize = canvasResize;
+
+            var keys = {
+                'w': false,
+                'a': false,
+                's': false,
+                'd': false,
+            };
+
+            document.addEventListener('keydown', function(event) {
+                
+                if (event.code == 'KeyW'){
+                    keys['w'] = true;
+                } else if(event.code == 'KeyA'){
+                    keys['a'] = true;
+                } else if(event.code == 'KeyS'){
+                    keys['s'] = true;
+                } else if(event.code == 'KeyD'){
+                    keys['d'] = true;
+                }
+                if(event.repeat == false){
+                    console.log(keys);
+                    socket.emit('pressedButtons', keys);
+                }
+            });
+
+            document.addEventListener('keyup', function(event) {
+                if (event.code == 'KeyW'){
+                    keys['w'] = false;
+                } else if(event.code == 'KeyA'){
+                    keys['a'] = false;
+                } else if(event.code == 'KeyS'){
+                    keys['s'] = false;
+                } else if(event.code == 'KeyD'){
+                    keys['d'] = false;
+                }
+                if(event.repeat == false){
+                    console.log(keys);
+                    socket.emit('pressedButtons', keys);
+                }
+            });
+
+            
+        </script>
+    </body>
+</html>
